@@ -1,4 +1,4 @@
-# Clove AI
+# Memory AI
 
 ## Tech Stack
 - Frontend: Next.js + TailwindCSS + shadcn

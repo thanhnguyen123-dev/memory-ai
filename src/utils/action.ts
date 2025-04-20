@@ -8,12 +8,17 @@ const signInWith = async (provider: Provider) => {
   const supabase = await createClient();
   const origin = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.SITE_URL;
 
-  const auth_callback_url = `${origin}/auth/callback`;
+  const authCallbackUrl = `${origin}/auth/callback`;
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: auth_callback_url,
+      redirectTo: authCallbackUrl,
+      scopes: "https://www.googleapis.com/auth/gmail.readonly",
+      queryParams: {
+        access_type: "offline",
+        prompt: "consent",
+      },
     },
   });
 
