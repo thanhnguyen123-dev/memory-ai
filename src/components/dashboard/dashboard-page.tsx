@@ -17,7 +17,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <p>hello</p>
       {threads.map((thread) => (
         <p key={thread.id}>{thread.snippet}</p>
       ))}
