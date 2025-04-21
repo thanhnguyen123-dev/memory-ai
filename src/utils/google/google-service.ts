@@ -19,6 +19,22 @@ async function getOAuth2Client() {
     refresh_token: session?.provider_refresh_token,
   }); 
 
+  oAuth2Client.on("tokens", (tokens) => {
+    const data: Record<string, string> = {};
+    if (tokens.access_token) {
+      data.provider_token = tokens.access_token;
+    }
+    if (tokens.refresh_token) {
+      data.provider_refresh_token = tokens.refresh_token;
+    }
+
+    if (Object.keys(data).length > 0) {
+      void supabase.auth.updateUser({ data });
+    }
+  });
+
+  await oAuth2Client.getAccessToken();
+
   return oAuth2Client;
 }
 
