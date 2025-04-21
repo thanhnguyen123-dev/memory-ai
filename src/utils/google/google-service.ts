@@ -3,9 +3,12 @@ import { createClient } from "@/utils/supabase/server";
 
 async function getOAuth2Client() {
   const supabase = await createClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!session?.provider_token || !session?.provider_refresh_token) {
+  const accessToken = user?.user_metadata.provider_token;
+  const refreshToken = user?.user_metadata.provider_refresh_token;
+
+  if (!accessToken || !refreshToken) {
     throw new Error("Missing Google OAuth2 tokens");
   }
   
@@ -15,8 +18,8 @@ async function getOAuth2Client() {
   );
 
   oAuth2Client.setCredentials({
-    access_token: session?.provider_token,
-    refresh_token: session?.provider_refresh_token,
+    access_token: accessToken,
+    refresh_token: refreshToken,
   }); 
 
   oAuth2Client.on("tokens", (tokens) => {
